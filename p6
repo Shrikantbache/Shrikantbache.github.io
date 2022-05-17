@@ -101,3 +101,8 @@ response(Reply) :-
 get_single_char(Code),
 put_code(Code), nl,
 char_code(Reply, Code).
+
+
+#sudo add-apt repository ppa:swi-prolog/stable
+#sudo apt-get install swi-prolog 
+#swipl -s file.
