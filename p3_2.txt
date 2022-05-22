@@ -1,0 +1,17 @@
+import pandas as pd
+url_link = 'https://raw.githubusercontent.com/DeBugg14/te-sppu-lab/main/Data-Science/Prac3/iris.csv'
+data = pd.read_csv(url_link)
+
+print('Iris-setosa')
+setosa = data['variety'] == 'Setosa'
+print(data[setosa].describe())
+
+print('Iris-versicolor')
+setosa = data['variety'] == 'Versicolor'
+print(data[setosa].describe())
+
+print('Iris-virginica')
+setosa = data['variety'] == 'Virginica'
+print(data[setosa].describe())
+
+	

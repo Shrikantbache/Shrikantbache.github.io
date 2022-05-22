@@ -1,0 +1,142 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+url_link = 'https://raw.githubusercontent.com/DeBugg14/te-sppu-lab/main/Data-Science/Prac2/prac2.csv'
+df=pd.read_csv(url_link)
+df.head(20)
+
+df.shape
+
+df.dtypes.value_counts()
+
+df.info()
+
+df.describe()
+
+df.isnull().sum()
+
+data=df
+coln=[]
+miss=[]
+coln.extend(data.columns)
+#print(miss)
+for i in coln:
+    t=data[i].isnull().sum()
+    if t!=0:
+        miss.append(i)
+    else:
+        continue
+print(miss)
+###############################################
+pd.options.mode.chained_assignment = None
+for j in miss:
+    q=data[j].dtypes
+    if (q=='int64' or q=='float64') :
+        f=data[j]
+        for k in range(data.shape[0]):
+            if (f[k]<0 or f[k]>100) :
+                f[k]=(np.nan)
+    else:
+        continue
+#################
+for j in miss:
+    q=data[j].dtypes
+    if (q=='int64' or q=='float64') :
+        data[j].fillna((data[j].mean()),inplace=True)
+    else:
+        data.fillna(method='bfill')
+data.head(10)
+##############
+data['Total Marks']=data['Phy_marks']+data['Che_marks']+data['EM1_marks']+data['PPS_marks']+data['SME_marks']
+data['Percentage']=data['Total Marks']/5
+data
+##########
+data['Attendance'].plot(kind='box')
+##########
+data['Che_marks'].plot(kind='box')
+#############
+data['EM1_marks'].plot(kind='box')
+###############
+data['PPS_marks'].plot(kind='box')
+#############
+data['SME_marks'].plot(kind='box')
+###########
+data['Total Marks'].plot(kind='box')
+##############
+data['Percentage'].plot(kind='box')
+###############3
+Q1 = data['Attendance'].quantile(0.25)
+Q3 = data['Attendance'].quantile(0.75)
+IQR = Q3 - Q1
+Lower_limit = Q1 - 1.5*IQR
+Upper_limit = Q3 + 1.5*IQR
+print("Q1 :",Q1,"\nQ3 :",Q3,"\nIQR :",IQR,"\nLower_limit :",Lower_limit,"\nUpper_limit:",Upper_limit)
+###########
+data[(data['Attendance']<Lower_limit)|(data['Attendance']>Upper_limit)]
+###########
+data=data[(data['Attendance']>Lower_limit)&(data['Attendance']<Upper_limit)]
+data[60:70]
+###########
+data['Attendance'].plot(kind='box')
+############
+Q1 = data['Che_marks'].quantile(0.25)
+Q3 = data['Che_marks'].quantile(0.75)
+IQR = Q3 - Q1
+Lower_limit = Q1 - 1.5*IQR
+Upper_limit = Q3 + 1.5*IQR
+print("Q1 :",Q1,"\nQ3 :",Q3,"\nIQR :",IQR,"\nLower_limit :",Lower_limit,"\nUpper_limit:",Upper_limit)
+###################
+Q1 = data['Che_marks'].quantile(0.25)
+Q3 = data['Che_marks'].quantile(0.75)
+IQR = Q3 - Q1
+Lower_limit = Q1 - 1.5*IQR
+Upper_limit = Q3 + 1.5*IQR
+print("Q1 :",Q1,"\nQ3 :",Q3,"\nIQR :",IQR,"\nLower_limit :",Lower_limit,"\nUpper_limit:",Upper_limit)
+#######
+data[(data['Che_marks']<Lower_limit)|(data['Che_marks']>Upper_limit)]
+##############33
+data=data[(data['Che_marks']>Lower_limit)&(data['Che_marks']<Upper_limit)]
+data[140:170]
+###############33
+data['Che_marks'].plot(kind='box')
+#############3
+Q1 = data['EM1_marks'].quantile(0.25)
+Q3 = data['EM1_marks'].quantile(0.75)
+IQR = Q3 - Q1
+Lower_limit = Q1 - 1.5*IQR
+Upper_limit = Q3 + 1.5*IQR
+print("Q1 :",Q1,"\nQ3 :",Q3,"\nIQR :",IQR,"\nLower_limit :",Lower_limit,"\nUpper_limit",Upper_limit)
+##################
+data[(data['EM1_marks']<Lower_limit)|(data['EM1_marks']>Upper_limit)]
+########
+data=data[(data['EM1_marks']>Lower_limit)&(data['EM1_marks']<Upper_limit)]
+data[150:160]
+################
+data['EM1_marks'].plot(kind='box')
+######3
+def BinningFunction(column,cut_points,labels=None):
+    minper=column.min()
+    maxper=column.max()
+    break_points=[minper]+cut_points+[maxper]
+    print("Gradding According to percentage \n>60 = F \n60-70 = B \n70-80 = A\n80-100 = O")
+    t=pd.cut(column,bins=break_points,labels=labels,include_lowest=True)
+    return t
+#########
+cut_points=[60,70,80]
+labels=['F','B','A','O']
+data["Grade"]=BinningFunction(data['Percentage'],cut_points,labels)
+data
+###############
+new_data1=data
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+column=['Attendance','Phy_marks','Che_marks','EM1_marks','PPS_marks','SME_marks','Total Marks']
+scaler.fit(new_data1[column])
+new_data1[column] = scaler.transform(new_data1[column])
+new_data1
+###############
+new_data2=data
+from scipy import stats
+column=['Attendance','Phy_marks','Che_marks','EM1_marks','PPS_marks','SME_marks','Total Marks']
+new_data2[column] = stats.zscore(new_data2[column])
+new_data2
