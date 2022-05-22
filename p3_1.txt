@@ -1,0 +1,27 @@
+import pandas as pd
+url_link = 'https://raw.githubusercontent.com/DeBugg14/te-sppu-lab/main/Data-Science/Prac3/wages.csv'
+df = pd.read_csv (url_link)
+df.describe()
+
+df.shape
+
+df.size
+
+df.min()
+
+df.max()
+
+df['age'].mode()
+
+df['age'].mean()
+
+df['age'].median()
+
+round(df['age'].std(),2)
+
+# Summary statistics for all numerical columns
+round(df.describe(),2)
+
+# Summary statistics by groups
+df['age'].groupby(df['ed']).describe()
+
